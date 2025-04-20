@@ -1,0 +1,47 @@
+[0.791s] Invoking command in '/workspaces/ros2/swerve_robot/build/swerve_robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_teleop:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_example:/workspaces/ros2/swerve_robot/install/swerve_robot_gazebo:/workspaces/ros2/swerve_robot/install/swerve_controller:/workspaces/ros2/ros2_ws/install/turtlebot3_static_path:/opt/ros/humble /usr/bin/cmake --build /workspaces/ros2/swerve_robot/build/swerve_robot_description -- -j8 -l8
+[1.042s] Invoked command in '/workspaces/ros2/swerve_robot/build/swerve_robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_teleop:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_example:/workspaces/ros2/swerve_robot/install/swerve_robot_gazebo:/workspaces/ros2/swerve_robot/install/swerve_controller:/workspaces/ros2/ros2_ws/install/turtlebot3_static_path:/opt/ros/humble /usr/bin/cmake --build /workspaces/ros2/swerve_robot/build/swerve_robot_description -- -j8 -l8
+[1.078s] Invoking command in '/workspaces/ros2/swerve_robot/build/swerve_robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_teleop:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_example:/workspaces/ros2/swerve_robot/install/swerve_robot_gazebo:/workspaces/ros2/swerve_robot/install/swerve_controller:/workspaces/ros2/ros2_ws/install/turtlebot3_static_path:/opt/ros/humble /usr/bin/cmake --install /workspaces/ros2/swerve_robot/build/swerve_robot_description
+[1.095s] -- Install configuration: ""
+[1.097s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/config
+[1.099s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/config/sim_controllers.yaml
+[1.099s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/launch
+[1.099s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/launch/description.launch.py
+[1.102s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/launch/rviz.launch.py
+[1.102s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes
+[1.103s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/base_link.dae
+[1.103s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/rear_left_wheel_link.dae
+[1.104s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/front_right_steering_link.dae
+[1.105s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/front_left_wheel_link.dae
+[1.108s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/front_left_steering_link.dae
+[1.109s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/front_right_wheel_link.dae
+[1.109s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/rear_right_wheel_link.dae
+[1.110s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/rear_right_steering_link.dae
+[1.110s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/meshes/rear_left_steering_link.dae
+[1.110s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/rviz
+[1.110s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/rviz/description.rviz
+[1.110s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf
+[1.111s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include
+[1.111s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/swerve_ros2_control.xacro
+[1.113s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/robot_parts
+[1.114s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/robot_parts/chassis.xacro
+[1.114s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/robot_parts/steering.xacro
+[1.115s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/robot_parts/wheel.xacro
+[1.115s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/include/swerve_robot_base.xacro
+[1.115s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/urdf/swerve_robot.xacro
+[1.116s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/ament_index/resource_index/package_run_dependencies/swerve_robot_description
+[1.116s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/ament_index/resource_index/parent_prefix_path/swerve_robot_description
+[1.116s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/environment/ament_prefix_path.sh
+[1.116s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/environment/ament_prefix_path.dsv
+[1.117s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/environment/path.sh
+[1.117s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/environment/path.dsv
+[1.117s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/local_setup.bash
+[1.118s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/local_setup.sh
+[1.119s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/local_setup.zsh
+[1.122s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/local_setup.dsv
+[1.122s] -- Installing: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/package.dsv
+[1.122s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/ament_index/resource_index/packages/swerve_robot_description
+[1.122s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.126s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/cmake/swerve_robot_descriptionConfig.cmake
+[1.126s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/cmake/swerve_robot_descriptionConfig-version.cmake
+[1.126s] -- Up-to-date: /workspaces/ros2/swerve_robot/install/swerve_robot_description/share/swerve_robot_description/package.xml
+[1.127s] Invoked command in '/workspaces/ros2/swerve_robot/build/swerve_robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_teleop:/workspaces/ros2/turtlebot3_ws/install/turtlebot3_example:/workspaces/ros2/swerve_robot/install/swerve_robot_gazebo:/workspaces/ros2/swerve_robot/install/swerve_controller:/workspaces/ros2/ros2_ws/install/turtlebot3_static_path:/opt/ros/humble /usr/bin/cmake --install /workspaces/ros2/swerve_robot/build/swerve_robot_description
