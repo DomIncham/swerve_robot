@@ -7,18 +7,24 @@ import time
 class SwerveAutoCommander(Node):
     def __init__(self):
         super().__init__('swerve_auto_commander')
-        self.pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.pub = self.create_publisher(Twist, '/swerve_drive/cmd_vel', 10)
         self.timer = self.create_timer(0.1, self.timer_callback)
 
         # รายการคำสั่งพิเศษพร้อม speed scaling (scale = ความเร็วสัมพัทธ์)
         # ("label", linear.x, linear.y, angular.z, speed_scale)
         self.commands = [
             ("Forward", 1.0, 0.0, 0.0, 1),
-            ("Forward-right", 0.7, 0.7, 0.0, 1),
+            ("Backward", -1.0, 0.0, 0.0, 1),
+            ("Right", 0.0, -1.0, 0.0, 1),
+            ("Left", 0.0, 1.0, 0.0, 1),
+            ("Forward-Left", 0.7, 0.7, 0.0, 1),
+            ("Forward-Right", 0.7, -0.7, 0.0, 1),
+            ("Backward-Left", -0.7, 0.7, 0.0, 1),
+            ("Backward-Right", -0.7, -0.7, 0.0, 1),
             ("Rotate", 0.0, 0.0, 4.0, 1),
-            ("Right", 0.0, 1.0, 0.0, 1),
             ("Forward-rotate", 0.8, 0.0, 0.8, 1),
-            ("Backward-left", -0.7, -0.7, 0.0, 1),
+            ("Curve-left", 0.7, 0.0, 0.7, 1),
+
         ]
 
         self.index = 0
