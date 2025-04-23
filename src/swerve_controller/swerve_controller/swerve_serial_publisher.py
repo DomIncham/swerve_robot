@@ -24,7 +24,7 @@ class SwerveSerialPublisher(Node):
             50
         )
 
-        self.send_interval = 0.5  # 100ms
+        self.send_interval = 0.1  # 500ms
         self.timer = self.create_timer(self.send_interval, self.send_serial_data)
 
         self.latest_joint_state = None
