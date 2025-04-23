@@ -14,22 +14,22 @@ class SwerveAutoCommander(Node):
         # ("label", linear.x, linear.y, angular.z, speed_scale)
         self.commands = [
             ("Forward", 1.0, 0.0, 0.0, 1),
-            ("Backward", -1.0, 0.0, 0.0, 1),
-            ("Right", 0.0, -1.0, 0.0, 1),
-            ("Left", 0.0, 1.0, 0.0, 1),
-            ("Forward-Left", 0.7, 0.7, 0.0, 1),
-            ("Forward-Right", 0.7, -0.7, 0.0, 1),
-            ("Backward-Left", -0.7, 0.7, 0.0, 1),
-            ("Backward-Right", -0.7, -0.7, 0.0, 1),
-            ("Rotate", 0.0, 0.0, 4.0, 1),
-            ("Forward-rotate", 0.8, 0.0, 0.8, 1),
-            ("Curve-left", 0.7, 0.0, 0.7, 1),
+            #("Backward", -1.0, 0.0, 0.0, 1),
+            #("Right", 0.0, -1.0, 0.0, 1),
+            #("Left", 0.0, 1.0, 0.0, 1),
+            #("Forward-Left", 0.7, 0.7, 0.0, 1),
+            #("Forward-Right", 0.7, -0.7, 0.0, 1),
+            #("Backward-Left", -0.7, 0.7, 0.0, 1),
+            #("Backward-Right", -0.7, -0.7, 0.0, 1),
+            #("Rotate", 0.0, 0.0, 4.0, 1),
+            #("Forward-rotate", 0.8, 0.0, 0.8, 1),
+            #("Curve-left", 0.7, 0.0, 0.7, 1),
 
         ]
 
         self.index = 0
         self.start_time = time.time()
-        self.command_duration = 4  # วินาทีต่อคำสั่ง
+        self.command_duration = 2  # วินาทีต่อคำสั่ง
 
     def timer_callback(self):
         now = time.time()
