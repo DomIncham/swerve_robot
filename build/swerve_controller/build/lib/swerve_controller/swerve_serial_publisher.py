@@ -17,6 +17,7 @@ class SwerveSerialPublisher(Node):
             self.get_logger().error("❌ Failed to open Serial port! Check connection.")
             self.ser = None
 
+        # Subscribe to /swerve_drive/joint_states
         self.subscription = self.create_subscription(
             JointState,
             '/swerve_drive/joint_states',
@@ -24,22 +25,18 @@ class SwerveSerialPublisher(Node):
             50
         )
 
-        self.send_interval = 0.1  # 500ms
-        self.timer = self.create_timer(self.send_interval, self.send_serial_data)
-
         self.latest_joint_state = None
-
         self.previous_motor_values = {
             "wheel_front_right": 0.0,
             "wheel_rear_left": 0.0,
             "wheel_rear_right": 0.0,
             "wheel_front_left": 0.0,
         }
-
         self.deadzone_threshold = 0.4
 
     def joint_state_callback(self, msg):
         self.latest_joint_state = msg
+        self.send_serial_data()
 
     def calculate_checksum(self, values):
         int_values = [int(v * 100) for v in values]
@@ -68,14 +65,6 @@ class SwerveSerialPublisher(Node):
 
         joint_map = {name: pos for name, pos in zip(self.latest_joint_state.name, self.latest_joint_state.position)}
         velocity_map = {name: vel for name, vel in zip(self.latest_joint_state.name, self.latest_joint_state.velocity)}
-        
-        # ❗ Check: ถ้า joint_states ทั้งหมด = 0 ให้ skip ไม่ต้องส่ง
-        all_positions_zero = all(abs(p) < 1e-5 for p in joint_map.values())
-        all_velocities_zero = all(abs(v) < 1e-5 for v in velocity_map.values())
-
-        if all_positions_zero and all_velocities_zero:
-            self.get_logger().info("🛑 All joint_states are 0 — skipping serial send.")
-            return
 
         # Steering angles
         servo1 = self.process_steering_value(joint_map.get("steering_front_right", 0.0))
@@ -92,16 +81,42 @@ class SwerveSerialPublisher(Node):
         checksum = self.calculate_checksum([motor1, motor2, motor3, motor4, servo1, servo2, servo3, servo4])
 
         data_packet = struct.pack('<8f i', motor1, motor2, motor3, motor4, servo1, servo2, servo3, servo4, checksum)
-        lendata =  len(data_packet)
-        
-        self.get_logger().info(f'datalen : {lendata}')
+
+        self.get_logger().info(f'datalen : {len(data_packet)}')
         self.ser.write(data_packet)
+        self.ser.flush()  # เพิ่มบรรทัดนี้เพื่อบังคับส่งข้อมูลทันที
 
         self.get_logger().info(f'Sent Data (Raw): {data_packet}')
         self.get_logger().info(f'Motor: [{motor1}, {motor2}, {motor3}, {motor4}]')
         self.get_logger().info(f'Servo: [{servo1}, {servo2}, {servo3}, {servo4}]')
         self.get_logger().info(f'Checksum: {checksum}')
         self.get_logger().info('-' * 50)
+
+    def send_emergency_stop(self):
+        """ส่งคำสั่งหยุดมอเตอร์ฉุกเฉิน"""
+        if self.ser is None:
+            return
+
+        # สร้างแพ็คเก็ตหยุดฉุกเฉิน (ทุกค่าเป็น 0)
+        stop_packet = struct.pack('<8f i', 
+            0.0, 0.0, 0.0, 0.0,  # motors
+            0.0, 0.0, 0.0, 0.0,  # servos
+            0                      # checksum
+        )
+        
+        try:
+            self.ser.write(stop_packet)
+            self.ser.flush()
+            self.get_logger().warn("🛑 EMERGENCY STOP SIGNAL SENT!")
+        except Exception as e:
+            self.get_logger().error(f"Failed to send emergency stop: {e}")
+
+    def destroy_node(self):
+        """Override การปิดโหนด"""
+        self.send_emergency_stop()
+        if self.ser is not None and self.ser.is_open:
+            self.ser.close()
+        super().destroy_node()
 
 def main(args=None):
     rclpy.init(args=args)
@@ -112,10 +127,12 @@ def main(args=None):
     try:
         executor.spin()
     except KeyboardInterrupt:
-        pass
-
-    node.destroy_node()
-    rclpy.shutdown()
+        node.get_logger().info("🛑 Received KeyboardInterrupt, shutting down...")
+    except Exception as e:
+        node.get_logger().error(f"❌ Node error: {e}")
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

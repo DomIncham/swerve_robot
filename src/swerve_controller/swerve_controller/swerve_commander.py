@@ -12,9 +12,9 @@ class SwerveCommander(Node):
 
         self.namespace_prefix = "/swerve_drive"
 
-        self.wheelbase = self.declare_parameter("wheelbase", 0.3).value
-        self.wheel_track = self.declare_parameter("wheel_track", 0.3).value
-        self.wheel_radius = self.declare_parameter("wheel_radius", 0.05).value
+        self.wheelbase = self.declare_parameter("wheelbase", 0.705).value
+        self.wheel_track = self.declare_parameter("wheel_track", 0.30).value
+        self.wheel_radius = self.declare_parameter("wheel_radius", 0.12).value
 
         self.joint_names = [
             "wheel_front_right",
