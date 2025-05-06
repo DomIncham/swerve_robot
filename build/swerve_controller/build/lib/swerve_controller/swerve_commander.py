@@ -12,10 +12,6 @@ class SwerveCommander(Node):
 
         self.namespace_prefix = "/swerve_drive"
 
-        self.wheelbase = self.declare_parameter("wheelbase", 0.705).value
-        self.wheel_track = self.declare_parameter("wheel_track", 0.30).value
-        self.wheel_radius = self.declare_parameter("wheel_radius", 0.12).value
-
         self.joint_names = [
             "wheel_front_right",
             "wheel_front_left",
@@ -26,6 +22,8 @@ class SwerveCommander(Node):
             "steering_rear_right",
             "steering_rear_left"
         ]
+
+        self.last_steering_pos = [0.0] * 4
 
         self.joint_state_pub = self.create_publisher(
             JointState, f"{self.namespace_prefix}/joint_states", 10
@@ -38,17 +36,93 @@ class SwerveCommander(Node):
             10
         )
 
+        # Robot physical parameters for inverse kinematics
+        self.wheelbase = 0.705  # meters
+        self.wheel_track = 0.30  # meters
+        self.wheel_radius = 0.12  # meters
+
     def twist_to_swerve(self, msg: Twist):
         vx, vy, wz = msg.linear.x, msg.linear.y, msg.angular.z
 
-        if np.allclose([vx, vy, wz], [0.0, 0.0, 0.0]):
+        if vx == 0 and vy == 0 and wz == 0:
+            self.last_steering_pos = [0.0] * 4
+
+        if np.isclose(vx, 0.0, atol=0.05) and np.isclose(vy, 0.0, atol=0.05) and np.isclose(wz, 0.01, atol=0.01):
             self.stop()
             return
 
-        wheel_pos = [0.0] * 4
+        # Choose dispatcher here
+        self.manual_command_dispatcher(vx, vy, wz)
+        # To use inverse kinematics instead, comment the line above and uncomment below:
+        # self.inverse_kinematics_dispatch(vx, vy, wz)
+
+    def manual_command_dispatcher(self, vx, vy, wz):
+        wheel_vel = [0.0] * 4
+        steering_pos = [0.0] * 4
+
+        # Thresholds
+        LINEAR_THRESHOLD = 0.2
+        ANGULAR_THRESHOLD = 0.2
+
+        # Constants
+        WHEEL_SPEED = 8.3
+        ROTATE_SERVO_OFFSET = 1.29
+        DIAGONAL_SERVO_OFFSET = 0.79
+        PURE_ROTATE_SERVO_OFFSET = 1.29
+
+        if np.isclose(vx, 0.0, atol=0.05) and np.isclose(vy, 0.0, atol=0.05) and abs(wz) > ANGULAR_THRESHOLD:
+            if wz > 0:
+                wheel_vel = [WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED]
+                steering_pos = [ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, ROTATE_SERVO_OFFSET]
+            else:
+                wheel_vel = [-WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, ROTATE_SERVO_OFFSET]
+
+        elif abs(vx) > abs(vy) and abs(vx) > abs(wz):
+            if vx > 0:
+                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [0.0] * 4
+            else:
+                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
+                steering_pos = [0.0] * 4
+
+        elif abs(vy) > abs(vx) and abs(vy) > abs(wz):
+            if vy > 0:
+                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [1.57] * 4
+            else:
+                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [-1.57] * 4
+
+        elif abs(vx) > LINEAR_THRESHOLD and abs(vy) > LINEAR_THRESHOLD:
+            if vx > 0 and vy > 0:
+                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [DIAGONAL_SERVO_OFFSET] * 4
+            elif vx > 0 and vy < 0:
+                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                steering_pos = [-DIAGONAL_SERVO_OFFSET] * 4
+            elif vx < 0 and vy > 0:
+                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
+                steering_pos = [-DIAGONAL_SERVO_OFFSET] * 4
+            elif vx < 0 and vy < 0:
+                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
+                steering_pos = [DIAGONAL_SERVO_OFFSET] * 4
+
+        self.last_steering_pos = steering_pos.copy()
+
+        joint_msg = JointState()
+        joint_msg.header.stamp = self.get_clock().now().to_msg()
+        joint_msg.name = self.joint_names
+        joint_msg.position = [0.0] * 4 + steering_pos
+        joint_msg.velocity = wheel_vel + [0.0] * 4
+
+        self.joint_state_pub.publish(joint_msg)
+
+    def inverse_kinematics_dispatch(self, vx, vy, wz):
         wheel_vel = []
         steering_pos = []
         steering_vel = [0.0] * 4
+        wheel_pos = [0.0] * 4
 
         wheels = {
             "wheel_front_right": (1, 1),
@@ -64,45 +138,25 @@ class SwerveCommander(Node):
             "steering_rear_left": (-1, -1),
         }
 
-        # คำนวณ wheel velocity (signed) + steering angle
-        for name in ["wheel_front_right", "wheel_front_left", "wheel_rear_right", "wheel_rear_left"]:
+        for name in wheels:
             ky, kx = wheels[name]
             wx = vx + (kx * self.wheelbase * wz / 2)
             wy = vy + (ky * self.wheel_track * wz / 2)
-
             vel_vector = np.array([wx, wy])
             speed = np.linalg.norm(vel_vector)
-
             raw_angle = np.arctan2(wy, wx)
-            flip = False
 
             if raw_angle > np.pi / 2:
-                flip = True
                 angle = raw_angle - np.pi
-            elif raw_angle < -np.pi / 2:
-                flip = True
-                angle = raw_angle + np.pi
-            else:
-                angle = raw_angle
-
-            signed_speed = (-1.0 if flip else 1.0) * speed / self.wheel_radius
-            wheel_vel.append(signed_speed)
-
-        # Steering angles (มุมถูกลิมิตแล้วจาก loop ด้านบน)
-        for name in ["steering_front_right", "steering_front_left", "steering_rear_right", "steering_rear_left"]:
-            ky, kx = steerings[name]
-            wx = vx + (kx * self.wheelbase * wz / 2)
-            wy = vy + (ky * self.wheel_track * wz / 2)
-
-            raw_angle = np.arctan2(wy, wx)
-            if raw_angle > np.pi / 2:
-                angle = raw_angle - np.pi
+                speed *= -1
             elif raw_angle < -np.pi / 2:
                 angle = raw_angle + np.pi
+                speed *= -1
             else:
                 angle = raw_angle
 
             steering_pos.append(angle)
+            wheel_vel.append(speed / self.wheel_radius)
 
         joint_msg = JointState()
         joint_msg.header.stamp = self.get_clock().now().to_msg()
@@ -116,9 +170,10 @@ class SwerveCommander(Node):
         joint_msg = JointState()
         joint_msg.header.stamp = self.get_clock().now().to_msg()
         joint_msg.name = self.joint_names
-        joint_msg.position = [0.0] * 8
+        joint_msg.position = [0.0] * 4 + self.last_steering_pos
         joint_msg.velocity = [0.0] * 8
         self.joint_state_pub.publish(joint_msg)
+
 
 def main():
     rclpy.init()
