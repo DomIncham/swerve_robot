@@ -1,5 +1,0 @@
-[0.000000] (-) TimerEvent: {}
-[0.000431] (-) JobUnselected: {'identifier': 'swerve_controller'}
-[0.000648] (-) JobUnselected: {'identifier': 'swerve_robot_description'}
-[0.000682] (-) JobUnselected: {'identifier': 'swerve_robot_gazebo'}
-[0.000962] (-) EventReactorShutdown: {}
