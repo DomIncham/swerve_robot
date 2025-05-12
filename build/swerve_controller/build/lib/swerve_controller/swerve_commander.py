@@ -64,48 +64,52 @@ class SwerveCommander(Node):
         LINEAR_THRESHOLD = 0.2
         ANGULAR_THRESHOLD = 0.2
 
-        # Constants
-        WHEEL_SPEED = 8.3
+        # Constants (now used as maximum values)
+        MAX_WHEEL_SPEED = 8.3
         ROTATE_SERVO_OFFSET = 1.29
         DIAGONAL_SERVO_OFFSET = 0.79
         PURE_ROTATE_SERVO_OFFSET = 1.29
 
+        # Calculate the overall speed and rotation factors (0 to 1)
+        linear_speed_factor = np.sqrt(vx**2 + vy**2)  # Normalize if needed
+        angular_speed_factor = min(abs(wz), 1.0)  # Cap at 1.0
+
         if np.isclose(vx, 0.0, atol=0.05) and np.isclose(vy, 0.0, atol=0.05) and abs(wz) > ANGULAR_THRESHOLD:
+            # Pure rotation
+            speed = MAX_WHEEL_SPEED * angular_speed_factor
             if wz > 0:
-                wheel_vel = [WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED]
+                wheel_vel = [speed, -speed, -speed, speed]
                 steering_pos = [ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, ROTATE_SERVO_OFFSET]
             else:
-                wheel_vel = [-WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED]
+                wheel_vel = [-speed, speed, speed, -speed]
                 steering_pos = [ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, -ROTATE_SERVO_OFFSET, ROTATE_SERVO_OFFSET]
 
         elif abs(vx) > abs(vy) and abs(vx) > abs(wz):
-            if vx > 0:
-                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
-                steering_pos = [0.0] * 4
-            else:
-                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
-                steering_pos = [0.0] * 4
+            # X-axis movement (forward/backward)
+            speed = MAX_WHEEL_SPEED * linear_speed_factor * np.sign(vx)
+            wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed for your configuration
+            steering_pos = [0.0] * 4
 
         elif abs(vy) > abs(vx) and abs(vy) > abs(wz):
-            if vy > 0:
-                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
-                steering_pos = [1.57] * 4
-            else:
-                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
-                steering_pos = [-1.57] * 4
+            # Y-axis movement (strafe left/right)
+            speed = MAX_WHEEL_SPEED * linear_speed_factor * np.sign(vy)
+            wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed
+            steering_pos = [1.57 if vy > 0 else -1.57] * 4
 
         elif abs(vx) > LINEAR_THRESHOLD and abs(vy) > LINEAR_THRESHOLD:
+            # Diagonal movement
+            speed = MAX_WHEEL_SPEED * linear_speed_factor
             if vx > 0 and vy > 0:
-                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                wheel_vel = [speed, speed, -speed, -speed]
                 steering_pos = [DIAGONAL_SERVO_OFFSET] * 4
             elif vx > 0 and vy < 0:
-                wheel_vel = [WHEEL_SPEED, WHEEL_SPEED, -WHEEL_SPEED, -WHEEL_SPEED]
+                wheel_vel = [speed, speed, -speed, -speed]
                 steering_pos = [-DIAGONAL_SERVO_OFFSET] * 4
             elif vx < 0 and vy > 0:
-                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
+                wheel_vel = [-speed, -speed, speed, speed]
                 steering_pos = [-DIAGONAL_SERVO_OFFSET] * 4
             elif vx < 0 and vy < 0:
-                wheel_vel = [-WHEEL_SPEED, -WHEEL_SPEED, WHEEL_SPEED, WHEEL_SPEED]
+                wheel_vel = [-speed, -speed, speed, speed]
                 steering_pos = [DIAGONAL_SERVO_OFFSET] * 4
 
         self.last_steering_pos = steering_pos.copy()

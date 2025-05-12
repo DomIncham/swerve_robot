@@ -12,9 +12,11 @@ class SwerveAutoCommander(Node):
         # รายการคำสั่งพิเศษพร้อม speed scaling (scale = ความเร็วสัมพัทธ์) และระยะเวลา (duration)    x,y,z,scale_speed,duration
         self.commands = [
             ("STOP", 1.0, 0.0, 0.0, 0.01, 3),  # duration = 3 วินาที
-            ("Forward", 1.0, 0.0, 0.0, 1, 3),  # duration = 1 วินาที
+            ("Forward", 1.0, 0.0, 0.0, 1, 2),  # duration = 1 วินาทีม
+            #("Forward", 1.0, 0.0, 0.0, 0.8, 2.5),  # duration = 1 วินาที
             ("STOP", 1.0, 0.0, 0.0, 0.01, 3),  # duration = 3 วินาที
-            ("Backward", -1.0, 0.0, 0.0, 1, 3),  # duration = 2 วินาที
+            ("Backward", -1.0, 0.0, 0.0, 1, 1),  # duration = 2 วินาที
+            #("Backward", -1.0, 0.0, 0.0, 0.8, 2.5),  # duration = 2 วินาที
             #("STOP", -1.0, 0.0, 0.0, 0.01, 1),  # duration = 2 วินาที
             #("Right", 0.0, -1.0, 0.0, 1, 1),
             #("STOP", 0.0, -1.0, 0.0, 0.01, 1),  # duration = 3 วินาที
