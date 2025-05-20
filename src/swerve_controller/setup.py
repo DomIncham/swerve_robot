@@ -16,6 +16,7 @@ scripts = [
     "swerve_serial_publisher = swerve_controller.swerve_serial_publisher:main",
     'swerve_auto_commander = swerve_controller.swerve_auto_commander:main',
     'swerve_commander = swerve_controller.swerve_commander:main',
+    "swerve_joy_controller = swerve_controller.swerve_joy_controller:main",
 ]
 
 # only touch this for special cases
