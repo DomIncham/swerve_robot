@@ -92,7 +92,7 @@ class SwerveCommander(Node):
 
         elif abs(vy) > abs(vx) and abs(vy) > abs(wz):
             # Y-axis movement (strafe left/right)
-            speed = MAX_WHEEL_SPEED * linear_speed_factor * np.sign(vy)
+            speed = MAX_WHEEL_SPEED * linear_speed_factor #* np.sign(vy)
             wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed
             steering_pos = [1.57 if vy > 0 else -1.57] * 4
 

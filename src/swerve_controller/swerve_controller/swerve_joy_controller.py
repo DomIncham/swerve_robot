@@ -11,97 +11,80 @@ class SwerveJoyController(Node):
         self.cmd_vel_pub = self.create_publisher(Twist, '/swerve_drive/cmd_vel', 10)
         self.joy_sub = self.create_subscription(Joy, '/joy', self.joy_callback, 10)
 
-        # ตั้งค่าความเร็วตามโหมด Auto
-        self.linear_speed = 1.0  # ใช้ 1.0 แล้วค่อยปรับในโค้ด
-        self.angular_speed = 3.0  # ตั้งค่าเหมือนโหมด Auto (Rotate)
-        
-        # เก็บสถานะก่อนหน้า
-        self.prev_dpad_x = 0.0
-        self.prev_dpad_y = 0.0
-        self.prev_rotate = 0.0
-        self.prev_lb_state = 0
-        
-        # เก็บสถานะปัจจุบัน
+        self.linear_speed = 1.0
+        self.angular_speed = 3.0
+
+        self.current_dpad_x = 0.0
+        self.current_dpad_y = 0.0
+        self.current_rotate = 0.0
+        self.lb_pressed = False
+
+        self.last_twist = Twist()
         self.active_command = None
 
+        # ตั้ง timer ทุก 50ms เช็คสถานะ
+        self.timer = self.create_timer(0.1, self.update_cmd_vel)
+
     def joy_callback(self, msg: Joy):
-        current_lb = msg.buttons[6]  # ปุ่ม LB
-        current_dpad_x = msg.axes[6]  # -1=left, 1=right
-        current_dpad_y = msg.axes[7]  # 1=up, -1=down
-        current_rotate = msg.axes[2]  # แกนหมุน
+        self.lb_pressed = (msg.buttons[7] == 1)
+        self.current_dpad_x = msg.axes[6]
+        self.current_dpad_y = msg.axes[7]
+        self.current_rotate = msg.axes[2]
 
-        # ตรวจสอบการเปลี่ยนแปลง
-        lb_changed = (current_lb != self.prev_lb_state)
-        dpad_x_changed = (current_dpad_x != self.prev_dpad_x)
-        dpad_y_changed = (current_dpad_y != self.prev_dpad_y)
-        rotate_changed = (current_rotate != self.prev_rotate)
-        
-        if not (lb_changed or dpad_x_changed or dpad_y_changed or rotate_changed):
-            return
-            
-        self.prev_lb_state = current_lb
-        self.prev_dpad_x = current_dpad_x
-        self.prev_dpad_y = current_dpad_y
-        self.prev_rotate = current_rotate
-
-        # ถ้าไม่กด LB ให้หยุด
-        if current_lb != 1:
-            if self.active_command is not None:
+    def update_cmd_vel(self):
+        if not self.lb_pressed:
+            if self.active_command is not None or self.twist_changed(self.last_twist, Twist()):
                 self.publish_stop()
+                self.last_twist = Twist()
                 self.active_command = None
             return
 
         twist = Twist()
         new_command = None
 
-        # จัดการการเคลื่อนที่แบบต่างๆ ตามโหมด Auto
-        if current_dpad_x != 0.0 or current_dpad_y != 0.0:
-            # Diagonal movements (เฉียง)
-            if current_dpad_x > 0 and current_dpad_y > 0:  # Forward-Left
-                twist.linear.x = 0.7  # vx
-                twist.linear.y = 0.7  # vy
-            elif current_dpad_x > 0 and current_dpad_y < 0:  # Forward-Right
-                twist.linear.x = 0.7   # vx
-                twist.linear.y = -0.7  # vy
-            elif current_dpad_x < 0 and current_dpad_y > 0:  # Backward-Left
-                twist.linear.x = -0.7  # vx
-                twist.linear.y = 0.7   # vy
-            elif current_dpad_x < 0 and current_dpad_y < 0:  # Backward-Right
-                twist.linear.x = -0.7  # vx
-                twist.linear.y = -0.7  # vy
-            # การเคลื่อนที่แนวตรง
-            elif current_dpad_y > 0:  # Forward
-                twist.linear.x = 1.0
-                twist.linear.y = 0.0
-            elif current_dpad_y < 0:  # Backward
-                twist.linear.x = -1.0
-                twist.linear.y = 0.0
-            elif current_dpad_x > 0:  # Right
-                twist.linear.x = 0.0
-                twist.linear.y = -1.0
-            elif current_dpad_x < 0:  # Left
-                twist.linear.x = 0.0
-                twist.linear.y = 1.0
-            
-            new_command = 'move'
-        
-        # การหมุน (Rotate)
-        if current_rotate == 1.0 or current_rotate == -1.0:
-            twist.angular.z = current_rotate * self.angular_speed
+        # ===== Diagonal Movement =====
+        if self.current_dpad_x != 0.0 and self.current_dpad_y != 0.0:
+            twist.linear.x = 0.7 * (1.0 if self.current_dpad_y > 0 else -1.0)
+            twist.linear.y = 0.7 * (1.0 if self.current_dpad_x > 0 else -1.0)
+            new_command = 'diagonal'
+
+        # ===== Straight Movement =====
+        elif self.current_dpad_y != 0.0:
+            twist.linear.x = 1.0 * (1.0 if self.current_dpad_y > 0 else -1.0)
+            twist.linear.y = 0.0
+            new_command = 'move_y'
+
+        elif self.current_dpad_x != 0.0:
+            twist.linear.x = 0.0
+            twist.linear.y = 1.0 * (1.0 if self.current_dpad_x > 0 else -1.0)
+            new_command = 'move_x'
+
+        # ===== Rotation =====
+        if self.current_rotate == 1.0 or self.current_rotate == -1.0:
+            twist.angular.z = self.current_rotate * self.angular_speed
             new_command = 'rotate'
 
-        # ส่งคำสั่งเมื่อมีสถานะเปลี่ยนแปลง
-        if new_command != self.active_command:
-            if new_command is None:
-                self.publish_stop()
-            else:
+        # ===== ส่งเฉพาะเมื่อค่าจริงเปลี่ยน =====
+        if new_command is not None:
+            if self.twist_changed(twist, self.last_twist):
                 self.cmd_vel_pub.publish(twist)
+                self.last_twist = twist
             self.active_command = new_command
+        else:
+            if self.twist_changed(self.last_twist, Twist()):
+                self.publish_stop()
+                self.last_twist = Twist()
+            self.active_command = None
 
     def publish_stop(self):
-        stop_msg = Twist()
-        self.cmd_vel_pub.publish(stop_msg)
+        self.cmd_vel_pub.publish(Twist())
 
+    def twist_changed(self, a: Twist, b: Twist) -> bool:
+        return (
+            abs(a.linear.x - b.linear.x) > 1e-3 or
+            abs(a.linear.y - b.linear.y) > 1e-3 or
+            abs(a.angular.z - b.angular.z) > 1e-3
+        )
 
 def main():
     rclpy.init()
