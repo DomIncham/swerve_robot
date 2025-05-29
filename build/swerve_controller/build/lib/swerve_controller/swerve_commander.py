@@ -65,7 +65,7 @@ class SwerveCommander(Node):
         ANGULAR_THRESHOLD = 0.2
 
         # Constants (now used as maximum values)
-        MAX_WHEEL_SPEED = 8.3
+        MAX_WHEEL_SPEED = 6.8
         ROTATE_SERVO_OFFSET = 1.29
         DIAGONAL_SERVO_OFFSET = 0.79
         PURE_ROTATE_SERVO_OFFSET = 1.29

@@ -15,7 +15,7 @@ class SwerveAutoCommander(Node):
             ("Forward", 1.0, 0.0, 0.0, 1, 2),  # duration = 1 วินาทีม
             #("Forward", 1.0, 0.0, 0.0, 0.8, 2.5),  # duration = 1 วินาที
             ("STOP", 1.0, 0.0, 0.0, 0.01, 3),  # duration = 3 วินาที
-            ("Backward", -1.0, 0.0, 0.0, 1, 1),  # duration = 2 วินาที
+            ("Backward", -1.0, 0.0, 0.0, 1, 2),  # duration = 2 วินาที
             #("Backward", -1.0, 0.0, 0.0, 0.8, 2.5),  # duration = 2 วินาที
             #("STOP", -1.0, 0.0, 0.0, 0.01, 1),  # duration = 2 วินาที
             #("Right", 0.0, -1.0, 0.0, 1, 1),
