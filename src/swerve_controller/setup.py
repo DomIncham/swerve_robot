@@ -17,6 +17,7 @@ scripts = [
     'swerve_auto_commander = swerve_controller.swerve_auto_commander:main',
     'swerve_commander = swerve_controller.swerve_commander:main',
     "swerve_joy_controller = swerve_controller.swerve_joy_controller:main",
+    'bno055_imu_publisher = swerve_controller.bno055_imu_publisher:main',
 ]
 
 # only touch this for special cases

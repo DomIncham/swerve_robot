@@ -22,6 +22,14 @@ def generate_launch_description():
             name='swerve_serial_publisher',
             output='screen',
         ),
+
+        Node(
+            package='swerve_imu_publisher',
+            executable='bno055_imu_publisher',
+            name='bno055_imu_publisher',
+            output='screen',
+            parameters=[]
+        ),
         
         #Node(
         #    package='swerve_controller',
