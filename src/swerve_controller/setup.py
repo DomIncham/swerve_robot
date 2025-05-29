@@ -18,6 +18,7 @@ scripts = [
     'swerve_commander = swerve_controller.swerve_commander:main',
     "swerve_joy_controller = swerve_controller.swerve_joy_controller:main",
     'bno055_imu_publisher = swerve_controller.bno055_imu_publisher:main',
+    "emergency_shutdown_node = swerve_controller.emergency_shutdown_node:main",
 ]
 
 # only touch this for special cases

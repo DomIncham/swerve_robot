@@ -30,6 +30,12 @@ def generate_launch_description():
             output='screen',
             parameters=[]
         ),
+        Node(
+            package='swerve_controller',
+            executable='emergency_shutdown_node',
+            name='emergency_shutdown_node',
+            output='screen',
+        ),
         
         #Node(
         #    package='swerve_controller',
