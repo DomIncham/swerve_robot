@@ -1,3 +1,4 @@
+/workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/emergency_shutdown_node.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/swerve_commander.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/swerve_auto_commander.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/swerve_odometer.py
@@ -6,6 +7,7 @@
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/bno055_imu_publisher.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/swerve_joints.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/swerve_joy_controller.py
+/workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/__pycache__/emergency_shutdown_node.cpython-310.pyc
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/__pycache__/swerve_commander.cpython-310.pyc
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/__pycache__/swerve_auto_commander.cpython-310.pyc
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller/__pycache__/swerve_odometer.cpython-310.pyc
@@ -22,6 +24,7 @@
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/launch/swerve_auto.launch.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/config/robot_geometry.yaml
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/config/controller.yaml
+/workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/swerve_controller/emergency_shutdown_node.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/swerve_controller/swerve_commander.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/swerve_controller/swerve_auto_commander.py
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/share/swerve_controller/swerve_controller/swerve_odometer.py
@@ -38,6 +41,7 @@
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller-0.1.0-py3.10.egg-info/zip-safe
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/python3.10/site-packages/swerve_controller-0.1.0-py3.10.egg-info/SOURCES.txt
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/swerve_controller/bno055_imu_publisher
+/workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/swerve_controller/emergency_shutdown_node
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/swerve_controller/swerve_auto_commander
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/swerve_controller/swerve_commander
 /workspaces/ros2-workspace/swerve_robot/install/swerve_controller/lib/swerve_controller/swerve_joy_controller

@@ -19,6 +19,7 @@ launch/swerve_joy.launch.py
 resource/swerve_controller
 swerve_controller/__init__.py
 swerve_controller/bno055_imu_publisher.py
+swerve_controller/emergency_shutdown_node.py
 swerve_controller/swerve_auto_commander.py
 swerve_controller/swerve_commander.py
 swerve_controller/swerve_joints.py

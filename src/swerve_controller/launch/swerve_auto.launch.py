@@ -24,18 +24,18 @@ def generate_launch_description():
         ),
 
         Node(
-            package='swerve_imu_publisher',
+            package='swerve_controller',
             executable='bno055_imu_publisher',
             name='bno055_imu_publisher',
             output='screen',
             parameters=[]
         ),
-        Node(
-            package='swerve_controller',
-            executable='emergency_shutdown_node',
-            name='emergency_shutdown_node',
-            output='screen',
-        ),
+        #Node(
+        #    package='swerve_controller',
+        #    executable='emergency_shutdown_node',
+        #    name='emergency_shutdown_node',
+        #    output='screen',
+        #),
         
         #Node(
         #    package='swerve_controller',
