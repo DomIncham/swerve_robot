@@ -9,6 +9,9 @@ import busio
 import adafruit_bno055
 from tf_transformations import quaternion_from_euler
 import numpy as np
+import rclpy
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import ExternalShutdownException
 
 class BNO055IMUPublisher(Node):
     def __init__(self):
@@ -112,11 +115,12 @@ class BNO055IMUPublisher(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = BNO055IMUPublisher()
-
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
     try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
+        executor.spin()
+    except (KeyboardInterrupt, ExternalShutdownException):
+        node.get_logger().warn("📴 IMU shutting down...")
     finally:
         node.destroy_node()
         rclpy.shutdown()

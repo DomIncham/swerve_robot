@@ -5,6 +5,9 @@ from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
+import rclpy
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import ExternalShutdownException
 
 class SwerveCommander(Node):
     def __init__(self):
@@ -65,7 +68,7 @@ class SwerveCommander(Node):
         ANGULAR_THRESHOLD = 0.2
 
         # Constants (now used as maximum values)
-        MAX_WHEEL_SPEED = 6.8
+        MAX_WHEEL_SPEED = 10.0
         ROTATE_SERVO_OFFSET = 1.29
         DIAGONAL_SERVO_OFFSET = 0.79
         PURE_ROTATE_SERVO_OFFSET = 1.29
@@ -93,7 +96,7 @@ class SwerveCommander(Node):
         elif abs(vy) > abs(vx) and abs(vy) > abs(wz):
             # Y-axis movement (strafe left/right)
             speed = MAX_WHEEL_SPEED * linear_speed_factor #* np.sign(vy)
-            wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed
+            wheel_vel = [speed, speed, -(speed+2), -speed]  # Adjust signs if needed
             steering_pos = [1.57 if vy > 0 else -1.57] * 4
 
         elif abs(vx) > LINEAR_THRESHOLD and abs(vy) > LINEAR_THRESHOLD:
@@ -179,10 +182,17 @@ class SwerveCommander(Node):
         self.joint_state_pub.publish(joint_msg)
 
 
-def main():
-    rclpy.init()
+def main(args=None):
+    rclpy.init(args=args)
     node = SwerveCommander()
-    rclpy.spin(node)
-
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
+    try:
+        executor.spin()
+    except (KeyboardInterrupt, ExternalShutdownException):
+        node.get_logger().warn("📴 Swerve Commander shutting down...")
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 if __name__ == "__main__":
     main()

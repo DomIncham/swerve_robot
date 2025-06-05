@@ -3,6 +3,9 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
+import rclpy
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import ExternalShutdownException
 
 class SwerveJoyController(Node):
     def __init__(self):
@@ -86,10 +89,18 @@ class SwerveJoyController(Node):
             abs(a.angular.z - b.angular.z) > 1e-3
         )
 
-def main():
-    rclpy.init()
+def main(args=None):
+    rclpy.init(args=args)
     node = SwerveJoyController()
-    rclpy.spin(node)
-
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
+    try:
+        executor.spin()
+    except (KeyboardInterrupt, ExternalShutdownException):
+        node.get_logger().warn("📴 Swerve Commander shutting down...")
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+        
 if __name__ == '__main__':
     main()

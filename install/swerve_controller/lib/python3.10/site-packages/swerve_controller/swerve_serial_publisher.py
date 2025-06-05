@@ -5,6 +5,8 @@ from sensor_msgs.msg import JointState
 import serial
 import struct
 from decimal import Decimal, ROUND_HALF_UP
+import rclpy
+from rclpy.executors import ExternalShutdownException
 
 class SwerveSerialPublisher(Node):
     def __init__(self):
@@ -127,6 +129,8 @@ class SwerveSerialPublisher(Node):
         super().destroy_node()
 
 
+
+
 def main(args=None):
     rclpy.init(args=args)
     node = SwerveSerialPublisher()
@@ -134,8 +138,8 @@ def main(args=None):
     executor.add_node(node)
     try:
         executor.spin()
-    except KeyboardInterrupt:
-        node.get_logger().info("🚫 Received KeyboardInterrupt, shutting down...")
+    except (KeyboardInterrupt, ExternalShutdownException):
+        node.get_logger().warn("📴 Swerve Serial Publisher shutting down...")
     finally:
         node.destroy_node()
         rclpy.shutdown()

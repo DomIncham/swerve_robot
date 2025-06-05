@@ -1,0 +1,22 @@
+[0.761s] Invoking command in '/workspaces/ros2-workspace/swerve_robot/build/swerve_robot_description': CMAKE_PREFIX_PATH=/workspaces/ros2-workspace/swerve_robot/install/swerve_controller:/opt/ros/humble /usr/bin/cmake /workspaces/ros2-workspace/swerve_robot/src/swerve_robot_description -DCMAKE_INSTALL_PREFIX=/workspaces/ros2-workspace/swerve_robot/install/swerve_robot_description
+[0.831s] -- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.182s] [31mCMake Error at CMakeLists.txt:5 (find_package):
+[1.182s]   By not providing "Findxacro.cmake" in CMAKE_MODULE_PATH this project has
+[1.182s]   asked CMake to find a package configuration file provided by "xacro", but
+[1.182s]   CMake did not find one.
+[1.182s] 
+[1.183s]   Could not find a package configuration file provided by "xacro" with any of
+[1.183s]   the following names:
+[1.183s] 
+[1.183s]     xacroConfig.cmake
+[1.183s]     xacro-config.cmake
+[1.183s] 
+[1.183s]   Add the installation prefix of "xacro" to CMAKE_PREFIX_PATH or set
+[1.183s]   "xacro_DIR" to a directory containing one of the above files.  If "xacro"
+[1.183s]   provides a separate development package or SDK, be sure it has been
+[1.183s]   installed.
+[1.183s] 
+[1.184s] [0m
+[1.184s] -- Configuring incomplete, errors occurred!
+[1.184s] See also "/workspaces/ros2-workspace/swerve_robot/build/swerve_robot_description/CMakeFiles/CMakeOutput.log".
+[1.187s] Invoked command in '/workspaces/ros2-workspace/swerve_robot/build/swerve_robot_description' returned '1': CMAKE_PREFIX_PATH=/workspaces/ros2-workspace/swerve_robot/install/swerve_controller:/opt/ros/humble /usr/bin/cmake /workspaces/ros2-workspace/swerve_robot/src/swerve_robot_description -DCMAKE_INSTALL_PREFIX=/workspaces/ros2-workspace/swerve_robot/install/swerve_robot_description
