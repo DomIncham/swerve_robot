@@ -68,7 +68,7 @@ class SwerveCommander(Node):
         ANGULAR_THRESHOLD = 0.2
 
         # Constants (now used as maximum values)
-        MAX_WHEEL_SPEED = 10.0
+        MAX_WHEEL_SPEED = 6.8
         ROTATE_SERVO_OFFSET = 1.29
         DIAGONAL_SERVO_OFFSET = 0.79
         PURE_ROTATE_SERVO_OFFSET = 1.29
@@ -90,13 +90,13 @@ class SwerveCommander(Node):
         elif abs(vx) > abs(vy) and abs(vx) > abs(wz):
             # X-axis movement (forward/backward)
             speed = MAX_WHEEL_SPEED * linear_speed_factor * np.sign(vx)
-            wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed for your configuration
+            wheel_vel = [speed, speed, -speed, -speed]  # Adjust signs if needed for your configuration wheel_vel = [speed, speed, -speed, -speed] 
             steering_pos = [0.0] * 4
 
         elif abs(vy) > abs(vx) and abs(vy) > abs(wz):
             # Y-axis movement (strafe left/right)
             speed = MAX_WHEEL_SPEED * linear_speed_factor #* np.sign(vy)
-            wheel_vel = [speed, speed, -(speed+2), -speed]  # Adjust signs if needed
+            wheel_vel = [speed, speed, -(speed), -speed]  # Adjust signs if needed
             steering_pos = [1.57 if vy > 0 else -1.57] * 4
 
         elif abs(vx) > LINEAR_THRESHOLD and abs(vy) > LINEAR_THRESHOLD:
